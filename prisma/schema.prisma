@@ -36,9 +36,5 @@ model Contact {
   updatedAt             DateTime  @updatedAt @map("updated_at")
 
   @@index([businessId], map: "contacts_business_id_idx")
-  @@index([businessId, emailNormalized], map: "contacts_business_email_normalized_idx")
-  @@index([businessId, phoneE164], map: "contacts_business_phone_e164_idx")
-  @@index([businessId, companyCodeNormalized], map: "contacts_business_company_code_normalized_idx")
-  @@index([businessId, vatCodeNormalized], map: "contacts_business_vat_code_normalized_idx")
   @@map("contacts")
 }

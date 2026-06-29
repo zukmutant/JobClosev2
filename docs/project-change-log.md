@@ -2,6 +2,16 @@
 
 ## 2026-06-29
 
+- Task summary: Cleaned up Contact migration indexes.
+- Files changed:
+  - `prisma/schema.prisma`
+  - `prisma/migrations/20260629195506_cleanup_contact_indexes/migration.sql`
+  - `docs/project-change-log.md`
+- Behavior changed: Updated database migration state so active-contact partial unique indexes exclude NULL prepared values and redundant regular composite indexes are dropped.
+- Behavior not changed: No app UI, service, repository, server action, auth/business context, matching, parsing, normalization, email logic, phone logic, or contact creation flow was added.
+- Validation run: `npx prisma migrate dev`, `npx prisma validate`, `npm run build`, `npm run test:ci`, and `git diff --check` passed.
+- Next recommended task: Add database-level migration verification tests for active Contact duplicate indexes and the empty-contact CHECK constraint.
+
 - Task summary: Created the initial Contact table Prisma migration with required PostgreSQL constraints.
 - Files changed:
   - `prisma/migrations/20260629190746_create_contact_table/migration.sql`

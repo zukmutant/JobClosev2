@@ -2,6 +2,17 @@
 
 ## 2026-06-29
 
+- Task summary: Added the Contact create Server Action boundary.
+- Files changed:
+  - `lib/contacts/create-contact-action.ts`
+  - `lib/contacts/create-contact-action-runner.ts`
+  - `lib/contacts/create-contact-action.test.ts`
+  - `docs/project-change-log.md`
+- Behavior changed: Added a server action boundary that validates external contact input, reads the trusted server `businessId`, and delegates to the existing create-contact service with the Prisma repository.
+- Behavior not changed: No UI, contact form, auth implementation, service behavior, repository behavior, schema, migration, parsing, normalization, email logic, phone logic, or new contact creation rules were added.
+- Validation run: `npx prisma validate` passed with a process-only `DATABASE_URL` from `.env.example`; `npm run test:ci`, `npm run build`, and `git diff --check` passed.
+- Next recommended task: Add the minimal contact form UI only after approving the exact MVP form fields and submit-state behavior.
+
 - Task summary: Added the MVP trusted business context foundation.
 - Files changed:
   - `lib/server/business-context.ts`

@@ -1,5 +1,6 @@
 import type { PreparedContactCreateInput } from "./contact.ts";
 import type { BlockingContactDuplicate, ContactRepository } from "./contact-repository.ts";
+import { isDuplicateContactError } from "./contact-repository.ts";
 import { hasNonEmptyContactField, selectContactDuplicateLookup } from "./contact-creation-rules.ts";
 import { preparedContactCreateInputSchema } from "./contact-validation.ts";
 
@@ -43,10 +44,18 @@ export async function createContact(
     }
   }
 
-  const contact = await repository.createContact({
-    businessId: command.businessId,
-    ...command.input,
-  });
+  try {
+    const contact = await repository.createContact({
+      businessId: command.businessId,
+      ...command.input,
+    });
 
-  return { ok: true, contactId: contact.id };
+    return { ok: true, contactId: contact.id };
+  } catch (error) {
+    if (isDuplicateContactError(error)) {
+      return { ok: false, reason: "duplicateContact", duplicate: error.duplicate };
+    }
+
+    throw error;
+  }
 }

@@ -2,6 +2,19 @@
 
 ## 2026-06-29
 
+- Task summary: Fixed backend duplicate safety for Contact creation.
+- Files changed:
+  - `lib/contacts/contact-repository.ts`
+  - `lib/contacts/create-contact-service.ts`
+  - `lib/contacts/create-contact-service.test.ts`
+  - `lib/contacts/prisma-contact-repository.ts`
+  - `lib/contacts/prisma-contact-repository.test.ts`
+  - `docs/project-change-log.md`
+- Behavior changed: Database unique constraint races during contact create now return the typed `duplicateContact` service result, and precise duplicate reason mapping no longer falls back to an invented email reason.
+- Behavior not changed: No UI, Server Action, API route, auth/business context, schema, migration, Contact MVP behavior, parser internals, normalization implementation, email logic, or phone logic was added.
+- Validation run: `npx prisma validate`, `npm run build`, `npm run test:ci`, and `git diff --check` passed.
+- Next recommended task: Add the Server Action boundary only after approving how trusted `businessId` is obtained for the MVP.
+
 - Task summary: Added explicit Contact duplicate rule tests.
 - Files changed:
   - `lib/contacts/contact-creation-rules.test.ts`

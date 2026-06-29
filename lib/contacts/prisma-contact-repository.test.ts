@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+import { Prisma } from "@prisma/client";
+
+import { DuplicateContactError } from "./contact-repository.ts";
 import { PrismaContactRepository } from "./prisma-contact-repository.ts";
 
 const businessId = "11111111-1111-4111-8111-111111111111";
@@ -118,6 +121,43 @@ test("Prisma repository maps create input to Prisma create data and returns doma
   assert.equal(contact.emailNormalized, "ada@example.test");
 });
 
+test("Prisma repository maps database unique constraint failure to typed duplicate error", async () => {
+  const delegate = new FakeContactDelegate(null, makeUniqueConstraintError("email_normalized"));
+  const repository = new PrismaContactRepository(delegate);
+
+  await assert.rejects(
+    repository.createContact({
+      businessId,
+      email: "Ada@Example.test",
+      emailNormalized: "ada@example.test",
+    }),
+    (error) => {
+      assert.equal(error instanceof DuplicateContactError, true);
+      assert.deepEqual((error as DuplicateContactError).duplicate, { reason: "email" });
+      return true;
+    },
+  );
+});
+
+test("Prisma repository does not invent a precise duplicate reason when fetched row does not match lookup", async () => {
+  const delegate = new FakeContactDelegate({
+    id: "22222222-2222-4222-8222-222222222222",
+    businessId,
+    emailNormalized: "other@example.test",
+  });
+  const repository = new PrismaContactRepository(delegate);
+
+  const duplicate = await repository.findBlockingDuplicate({
+    kind: "precise",
+    businessId,
+    values: {
+      emailNormalized: "ada@example.test",
+    },
+  });
+
+  assert.equal(duplicate, null);
+});
+
 type FakeContact = {
   id: string;
   businessId: string;
@@ -151,9 +191,11 @@ class FakeContactDelegate {
   lastCreateArgs: unknown;
   lastFindFirstArgs: unknown;
   private readonly findFirstResult: FakeContact | null;
+  private readonly createError: unknown;
 
-  constructor(findFirstResult: Partial<FakeContact> | null) {
+  constructor(findFirstResult: Partial<FakeContact> | null, createError?: unknown) {
     this.findFirstResult = findFirstResult === null ? null : makeContact(findFirstResult);
+    this.createError = createError;
   }
 
   async findFirst(args: unknown): Promise<FakeContact | null> {
@@ -163,12 +205,25 @@ class FakeContactDelegate {
 
   async create(args: unknown): Promise<FakeContact> {
     this.lastCreateArgs = args;
+
+    if (this.createError !== undefined) {
+      throw this.createError;
+    }
+
     return makeContact({
       id: "33333333-3333-4333-8333-333333333333",
       businessId,
       emailNormalized: "ada@example.test",
     });
   }
+}
+
+function makeUniqueConstraintError(target: string): Prisma.PrismaClientKnownRequestError {
+  return new Prisma.PrismaClientKnownRequestError("Unique constraint failed", {
+    code: "P2002",
+    clientVersion: "test",
+    meta: { target },
+  });
 }
 
 function makeContact(overrides: Partial<FakeContact>): FakeContact {

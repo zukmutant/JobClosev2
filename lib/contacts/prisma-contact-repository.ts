@@ -1,4 +1,5 @@
-import type { Contact as PrismaContact, Prisma, PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
+import type { Contact as PrismaContact, PrismaClient } from "@prisma/client";
 
 import { prisma } from "../server/prisma.ts";
 import type { Contact, ContactCreateRecord } from "./contact.ts";
@@ -7,6 +8,7 @@ import type {
   BlockingContactDuplicateLookup,
   ContactRepository,
 } from "./contact-repository.ts";
+import { DuplicateContactError } from "./contact-repository.ts";
 
 type ContactDelegate = Pick<PrismaClient["contact"], "create" | "findFirst">;
 
@@ -28,32 +30,42 @@ export class PrismaContactRepository implements ContactRepository {
   }
 
   async createContact(input: ContactCreateRecord): Promise<Contact> {
-    const contact = await this.contacts.create({
-      data: {
-        businessId: input.businessId,
-        firstName: input.firstName,
-        lastName: input.lastName,
-        displayName: input.displayName,
-        companyName: input.companyName,
-        firstNameNormalized: input.firstNameNormalized,
-        lastNameNormalized: input.lastNameNormalized,
-        displayNameNormalized: input.displayNameNormalized,
-        companyNameNormalized: input.companyNameNormalized,
-        email: input.email,
-        emailNormalized: input.emailNormalized,
-        emailDomain: input.emailDomain,
-        phone: input.phone,
-        phoneE164: input.phoneE164,
-        phoneRegion: input.phoneRegion,
-        companyCode: input.companyCode,
-        companyCodeNormalized: input.companyCodeNormalized,
-        vatCode: input.vatCode,
-        vatCodeNormalized: input.vatCodeNormalized,
-        phoneSmsEnabled: input.phoneSmsEnabled,
-        phoneWhatsappEnabled: input.phoneWhatsappEnabled,
-        phoneTelegramEnabled: input.phoneTelegramEnabled,
-      },
-    });
+    let contact: PrismaContact;
+
+    try {
+      contact = await this.contacts.create({
+        data: {
+          businessId: input.businessId,
+          firstName: input.firstName,
+          lastName: input.lastName,
+          displayName: input.displayName,
+          companyName: input.companyName,
+          firstNameNormalized: input.firstNameNormalized,
+          lastNameNormalized: input.lastNameNormalized,
+          displayNameNormalized: input.displayNameNormalized,
+          companyNameNormalized: input.companyNameNormalized,
+          email: input.email,
+          emailNormalized: input.emailNormalized,
+          emailDomain: input.emailDomain,
+          phone: input.phone,
+          phoneE164: input.phoneE164,
+          phoneRegion: input.phoneRegion,
+          companyCode: input.companyCode,
+          companyCodeNormalized: input.companyCodeNormalized,
+          vatCode: input.vatCode,
+          vatCodeNormalized: input.vatCodeNormalized,
+          phoneSmsEnabled: input.phoneSmsEnabled,
+          phoneWhatsappEnabled: input.phoneWhatsappEnabled,
+          phoneTelegramEnabled: input.phoneTelegramEnabled,
+        },
+      });
+    } catch (error) {
+      if (isPrismaUniqueConstraintError(error)) {
+        throw new DuplicateContactError(getDuplicateFromUniqueConstraint(error));
+      }
+
+      throw error;
+    }
 
     return toContact(contact);
   }
@@ -98,10 +110,13 @@ export class PrismaContactRepository implements ContactRepository {
       return null;
     }
 
-    return {
-      contactId: contact.id,
-      reason: getPreciseDuplicateReason(contact, lookup),
-    };
+    const reason = getPreciseDuplicateReason(contact, lookup);
+
+    if (reason === undefined) {
+      return null;
+    }
+
+    return { contactId: contact.id, reason };
   }
 
   private async findNameDuplicate(
@@ -137,7 +152,7 @@ export const contactRepository = new PrismaContactRepository(prisma.contact);
 function getPreciseDuplicateReason(
   contact: PrismaContact,
   lookup: Extract<BlockingContactDuplicateLookup, { kind: "precise" }>,
-): BlockingContactDuplicate["reason"] {
+): BlockingContactDuplicate["reason"] | undefined {
   if (
     lookup.values.emailNormalized !== undefined &&
     contact.emailNormalized === lookup.values.emailNormalized
@@ -163,7 +178,55 @@ function getPreciseDuplicateReason(
     return "vatCode";
   }
 
-  return "email";
+  return undefined;
+}
+
+function isPrismaUniqueConstraintError(
+  error: unknown,
+): error is Prisma.PrismaClientKnownRequestError {
+  return isObjectWithCode(error) && error.code === "P2002";
+}
+
+function isObjectWithCode(error: unknown): error is { code: string } {
+  return typeof error === "object" && error !== null && "code" in error;
+}
+
+function getDuplicateFromUniqueConstraint(
+  error: Prisma.PrismaClientKnownRequestError,
+): BlockingContactDuplicate | undefined {
+  const target = getConstraintTarget(error);
+
+  if (includesAny(target, ["emailNormalized", "email_normalized", "email"])) {
+    return { reason: "email" };
+  }
+
+  if (includesAny(target, ["phoneE164", "phone_e164", "phone"])) {
+    return { reason: "phone" };
+  }
+
+  if (includesAny(target, ["companyCodeNormalized", "company_code_normalized", "company_code"])) {
+    return { reason: "companyCode" };
+  }
+
+  if (includesAny(target, ["vatCodeNormalized", "vat_code_normalized", "vat_code"])) {
+    return { reason: "vatCode" };
+  }
+
+  return undefined;
+}
+
+function getConstraintTarget(error: Prisma.PrismaClientKnownRequestError): string {
+  const target = error.meta?.target;
+
+  if (Array.isArray(target)) {
+    return target.join(" ");
+  }
+
+  return typeof target === "string" ? target : "";
+}
+
+function includesAny(value: string, needles: string[]): boolean {
+  return needles.some((needle) => value.includes(needle));
 }
 
 function toContact(contact: PrismaContact): Contact {

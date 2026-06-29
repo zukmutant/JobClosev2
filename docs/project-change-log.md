@@ -2,6 +2,23 @@
 
 ## 2026-06-29
 
+- Task summary: Added the backend domain slice for Contact Creation MVP.
+- Files changed:
+  - `lib/contacts/contact.ts`
+  - `lib/contacts/contact-validation.ts`
+  - `lib/contacts/contact-creation-rules.ts`
+  - `lib/contacts/contact-repository.ts`
+  - `lib/contacts/create-contact-service.ts`
+  - `lib/contacts/contact-creation-rules.test.ts`
+  - `package.json`
+  - `package-lock.json`
+  - `tsconfig.json`
+  - `docs/project-change-log.md`
+- Behavior changed: Added Contact domain types, raw and prepared create-contact validation schemas, pure empty-contact and duplicate-lookup decision rules, a repository interface, an application service skeleton, and unit tests for approved rule decisions.
+- Behavior not changed: No UI, Server Action, API route, auth/business context lookup, repository implementation, Prisma write path, email parser, phone parser, matching implementation, normalization implementation, or contact creation flow was added.
+- Validation run: `npx prisma validate`, `npm run build`, `npm run test:ci`, and `git diff --check` passed.
+- Next recommended task: Implement a Prisma-backed Contact repository adapter behind the `ContactRepository` interface, using the existing database constraints and without adding UI or route handlers.
+
 - Task summary: Cleaned up Contact migration indexes.
 - Files changed:
   - `prisma/schema.prisma`

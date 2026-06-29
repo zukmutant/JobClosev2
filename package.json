@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "test:ci": "node --test"
+    "test:ci": "node --experimental-strip-types --test \"lib/**/*.test.ts\""
   },
   "dependencies": {
     "@mantine/core": "8.2.5",
@@ -13,7 +13,8 @@
     "@prisma/client": "^6.19.3",
     "next": "15.5.19",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "24.1.0",

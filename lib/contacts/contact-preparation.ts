@@ -1,4 +1,5 @@
 import type { ContactCreateInput, PreparedContactCreateInput } from "./contact.ts";
+import { z } from "zod";
 
 const textFields = [
   "firstName",
@@ -11,6 +12,8 @@ const textFields = [
   "vatCode",
 ] as const satisfies readonly (keyof ContactCreateInput)[];
 
+const directEmailSchema = z.email();
+
 export function prepareContactCreateInput(input: ContactCreateInput): PreparedContactCreateInput {
   const prepared: PreparedContactCreateInput = {};
 
@@ -22,9 +25,11 @@ export function prepareContactCreateInput(input: ContactCreateInput): PreparedCo
     }
   }
 
-  copyBoolean(input, prepared, "phoneSmsEnabled");
-  copyBoolean(input, prepared, "phoneWhatsappEnabled");
-  copyBoolean(input, prepared, "phoneTelegramEnabled");
+  if (prepared.phone !== undefined) {
+    copyBoolean(input, prepared, "phoneSmsEnabled");
+    copyBoolean(input, prepared, "phoneWhatsappEnabled");
+    copyBoolean(input, prepared, "phoneTelegramEnabled");
+  }
 
   prepared.firstNameNormalized = normalizeTextForExactMatch(prepared.firstName);
   prepared.lastNameNormalized = normalizeTextForExactMatch(prepared.lastName);
@@ -75,6 +80,12 @@ function getEmailParts(
   value: string | undefined,
 ): { localPart: string; domain: string } | undefined {
   if (value === undefined) {
+    return undefined;
+  }
+
+  // Direct email fields may use Zod email validation. Arbitrary-text email
+  // extraction still needs the approved RFC-compatible parser slice.
+  if (!directEmailSchema.safeParse(value).success) {
     return undefined;
   }
 

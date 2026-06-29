@@ -2,6 +2,16 @@
 
 ## 2026-06-29
 
+- Task summary: Fixed Contact preparation edge cases.
+- Files changed:
+  - `lib/contacts/contact-preparation.ts`
+  - `lib/contacts/contact-preparation.test.ts`
+  - `docs/project-change-log.md`
+- Behavior changed: Contact preparation now drops phone channel flags unless a trimmed phone value is present, and direct email input must pass Zod email validation before deriving `emailNormalized` or `emailDomain`.
+- Behavior not changed: No UI, phone parser, persistence schema, auth implementation, service behavior, repository behavior, contact form, arbitrary-text email extractor, or phone E.164 preparation was added.
+- Validation run: `npx prisma validate` passed with a process-only `DATABASE_URL` from `.env.example`; `npm run test:ci`, `npm run build`, and `git diff --check` passed.
+- Next recommended task: Add the minimal contact form UI only after approving the exact MVP form fields and submit-state behavior.
+
 - Task summary: Added Contact create input preparation before the service call.
 - Files changed:
   - `lib/contacts/contact-preparation.ts`

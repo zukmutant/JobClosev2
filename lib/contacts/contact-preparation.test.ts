@@ -37,6 +37,17 @@ test("prepareContactCreateInput normalizes email and extracts email domain", () 
   );
 });
 
+test("prepareContactCreateInput does not prepare invalid-looking email keys", () => {
+  assert.deepEqual(
+    prepareContactCreateInput({
+      email: "  ada@example  ",
+    }),
+    {
+      email: "ada@example",
+    },
+  );
+});
+
 test("prepareContactCreateInput normalizes typed company and VAT codes", () => {
   assert.deepEqual(
     prepareContactCreateInput({
@@ -67,6 +78,17 @@ test("prepareContactCreateInput keeps phone parser internals out of scope", () =
   );
 });
 
+test("prepareContactCreateInput omits phone channel flags when phone is missing", () => {
+  assert.deepEqual(
+    prepareContactCreateInput({
+      phoneSmsEnabled: true,
+      phoneWhatsappEnabled: true,
+      phoneTelegramEnabled: true,
+    }),
+    {},
+  );
+});
+
 test("prepareContactCreateInput omits whitespace-only text fields", () => {
   assert.deepEqual(
     prepareContactCreateInput({
@@ -74,8 +96,6 @@ test("prepareContactCreateInput omits whitespace-only text fields", () => {
       email: "   ",
       phoneTelegramEnabled: true,
     }),
-    {
-      phoneTelegramEnabled: true,
-    },
+    {},
   );
 });

@@ -90,6 +90,40 @@ test("duplicate decision uses normalized names only when no precise prepared fie
   );
 });
 
+test("duplicate decision checks first-name-only normalized name duplicates", () => {
+  assert.deepEqual(
+    selectContactDuplicateLookup(businessId, {
+      firstName: "Ada",
+      firstNameNormalized: "ada",
+    }),
+    {
+      kind: "name",
+      businessId,
+      firstNameNormalized: "ada",
+      lastNameNormalized: undefined,
+      displayNameNormalized: undefined,
+      companyNameNormalized: undefined,
+    },
+  );
+});
+
+test("duplicate decision checks company-name-only normalized name duplicates", () => {
+  assert.deepEqual(
+    selectContactDuplicateLookup(businessId, {
+      companyName: "Analytical Engines Ltd",
+      companyNameNormalized: "analytical engines ltd",
+    }),
+    {
+      kind: "name",
+      businessId,
+      firstNameNormalized: undefined,
+      lastNameNormalized: undefined,
+      displayNameNormalized: undefined,
+      companyNameNormalized: "analytical engines ltd",
+    },
+  );
+});
+
 test("duplicate decision skips duplicate lookup when no reliable prepared duplicate field exists", () => {
   assert.deepEqual(
     selectContactDuplicateLookup(businessId, {

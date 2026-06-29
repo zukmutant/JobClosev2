@@ -2,6 +2,15 @@
 
 ## 2026-06-29
 
+- Task summary: Added explicit Contact duplicate rule tests.
+- Files changed:
+  - `lib/contacts/contact-creation-rules.test.ts`
+  - `docs/project-change-log.md`
+- Behavior changed: None. Added test coverage only for first-name-only and company-name-only duplicate lookup decisions.
+- Behavior not changed: No UI, API route, Server Action, service logic, repository logic, schema, migration, Contact MVP behavior, matching, parsing, normalization, email logic, or phone logic was changed.
+- Validation run: `npm run build`, `npm run test:ci`, and `git diff --check` passed.
+- Next recommended task: Add the Server Action boundary only after approving how trusted `businessId` is obtained for the MVP.
+
 - Task summary: Added the Prisma-backed Contact repository adapter.
 - Files changed:
   - `lib/server/prisma.ts`

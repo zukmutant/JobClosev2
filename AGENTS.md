@@ -446,3 +446,32 @@ The agent must stop and request approval if:
 - implementation requires an unapproved stack/library;
 - the task mixes unrelated changes;
 - validation cannot be run while the task requires validation.
+
+
+## Commit and push rule
+
+For every implementation task that changes files, the agent must commit the approved changes unless the task explicitly says not to commit.
+
+Default implementation flow:
+
+1. Inspect the approved source documents.
+2. Make only the requested changes.
+3. Run required validation for the task scope.
+4. Update the required change log file.
+5. Run `git diff --check`.
+6. Review `git diff`.
+7. Stage only files that belong to the task.
+8. Create a Git commit with a clear task-specific message.
+9. Report the commit hash.
+10. Push the commit to the current tracked remote branch, unless the task explicitly says not to push.
+
+The agent must not commit if:
+
+* validation required by the task fails;
+* files outside the task scope were changed;
+* the task was read-only or inspection-only;
+* the user explicitly says not to commit;
+* the repository state is unsafe or unclear;
+* secrets, `.env`, generated build output, `node_modules`, `.next`, logs, or other ignored artifacts would be committed.
+
+If the agent cannot commit or push, it must report the exact reason and leave the working tree status visible in the final report.

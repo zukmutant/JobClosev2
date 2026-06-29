@@ -2,6 +2,19 @@
 
 ## 2026-06-29
 
+- Task summary: Added the Prisma-backed Contact repository adapter.
+- Files changed:
+  - `lib/server/prisma.ts`
+  - `lib/contacts/prisma-contact-repository.ts`
+  - `lib/contacts/prisma-contact-repository.test.ts`
+  - `lib/contacts/contact-creation-rules.ts`
+  - `lib/contacts/contact-creation-rules.test.ts`
+  - `docs/project-change-log.md`
+- Behavior changed: Added a server-side Prisma client boundary, a `ContactRepository` implementation for active duplicate lookup and contact persistence mapping, and repository-level tests using a fake Prisma delegate.
+- Behavior not changed: No UI, Server Action, API route, auth/business context, Contact MVP behavior, parser internals, normalization implementation, or new database schema was added.
+- Validation run: `npx prisma validate`, `npm run build`, `npm run test:ci`, and `git diff --check` passed.
+- Next recommended task: Add a Server Action boundary that obtains trusted `businessId`, validates external input with Zod, calls the contact creation service, and returns the typed result.
+
 - Task summary: Added the backend domain slice for Contact Creation MVP.
 - Files changed:
   - `lib/contacts/contact.ts`

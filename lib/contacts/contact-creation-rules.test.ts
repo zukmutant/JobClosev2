@@ -43,7 +43,9 @@ test("duplicate decision uses precise prepared fields before name fields", () =>
     {
       kind: "precise",
       businessId,
-      fields: ["emailNormalized"],
+      values: {
+        emailNormalized: "ada@example.test",
+      },
     },
   );
 });
@@ -59,7 +61,12 @@ test("duplicate decision checks all available precise prepared fields", () => {
     {
       kind: "precise",
       businessId,
-      fields: ["emailNormalized", "phoneE164", "companyCodeNormalized", "vatCodeNormalized"],
+      values: {
+        emailNormalized: "ada@example.test",
+        phoneE164: "+37061234567",
+        companyCodeNormalized: "12345",
+        vatCodeNormalized: "lt12345",
+      },
     },
   );
 });

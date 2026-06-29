@@ -17,11 +17,13 @@ export type PreciseContactDuplicateField =
   | "companyCodeNormalized"
   | "vatCodeNormalized";
 
+export type PreciseContactDuplicateValues = Partial<Record<PreciseContactDuplicateField, string>>;
+
 export type ContactDuplicateLookup =
   | {
       kind: "precise";
       businessId: string;
-      fields: PreciseContactDuplicateField[];
+      values: PreciseContactDuplicateValues;
     }
   | {
       kind: "name";
@@ -44,26 +46,26 @@ export function selectContactDuplicateLookup(
   businessId: string,
   input: PreparedContactCreateInput,
 ): ContactDuplicateLookup {
-  const fields: PreciseContactDuplicateField[] = [];
+  const values: PreciseContactDuplicateValues = {};
 
   if (hasText(input.emailNormalized)) {
-    fields.push("emailNormalized");
+    values.emailNormalized = input.emailNormalized;
   }
 
   if (hasText(input.phoneE164)) {
-    fields.push("phoneE164");
+    values.phoneE164 = input.phoneE164;
   }
 
   if (hasText(input.companyCodeNormalized)) {
-    fields.push("companyCodeNormalized");
+    values.companyCodeNormalized = input.companyCodeNormalized;
   }
 
   if (hasText(input.vatCodeNormalized)) {
-    fields.push("vatCodeNormalized");
+    values.vatCodeNormalized = input.vatCodeNormalized;
   }
 
-  if (fields.length > 0) {
-    return { kind: "precise", businessId, fields };
+  if (Object.keys(values).length > 0) {
+    return { kind: "precise", businessId, values };
   }
 
   const nameLookup = {

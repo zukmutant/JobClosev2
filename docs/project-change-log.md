@@ -2,6 +2,16 @@
 
 ## 2026-06-29
 
+- Task summary: Added the MVP trusted business context foundation.
+- Files changed:
+  - `lib/server/business-context.ts`
+  - `lib/server/business-context.test.ts`
+  - `docs/project-change-log.md`
+- Behavior changed: Added a server-side mock helper that returns a fixed development `businessId` without accepting editable caller input.
+- Behavior not changed: No auth implementation, UI, Server Action, contact form, schema, migration, repository behavior, contact creation flow, parsing, normalization, email logic, or phone logic was added.
+- Validation run: `npx prisma validate` passed with a process-only `DATABASE_URL` from `.env.example`; `npm run build`, `npm run test:ci`, and `git diff --check` passed.
+- Next recommended task: Add the Contact create Server Action boundary that reads `businessId` from `getTrustedBusinessContext`, validates external input with Zod, and calls the existing contact creation service.
+
 - Task summary: Documented the duplicateContact result contract for database unique constraint races.
 - Files changed:
   - `lib/contacts/contact-repository.ts`

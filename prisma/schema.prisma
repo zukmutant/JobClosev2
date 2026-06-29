@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Contact {
+  id                    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  businessId            String    @map("business_id") @db.Uuid
+  firstName             String?   @map("first_name")
+  lastName              String?   @map("last_name")
+  displayName           String?   @map("display_name")
+  companyName           String?   @map("company_name")
+  firstNameNormalized   String?   @map("first_name_normalized")
+  lastNameNormalized    String?   @map("last_name_normalized")
+  displayNameNormalized String?   @map("display_name_normalized")
+  companyNameNormalized String?   @map("company_name_normalized")
+  email                 String?
+  emailNormalized       String?   @map("email_normalized")
+  emailDomain           String?   @map("email_domain")
+  phone                 String?
+  phoneE164             String?   @map("phone_e164")
+  phoneRegion           String?   @map("phone_region")
+  companyCode           String?   @map("company_code")
+  companyCodeNormalized String?   @map("company_code_normalized")
+  vatCode               String?   @map("vat_code")
+  vatCodeNormalized     String?   @map("vat_code_normalized")
+  phoneSmsEnabled       Boolean   @default(false) @map("phone_sms_enabled")
+  phoneWhatsappEnabled  Boolean   @default(false) @map("phone_whatsapp_enabled")
+  phoneTelegramEnabled  Boolean   @default(false) @map("phone_telegram_enabled")
+  removedFromActiveAt   DateTime? @map("removed_from_active_at")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  @@index([businessId], map: "contacts_business_id_idx")
+  @@index([businessId, emailNormalized], map: "contacts_business_email_normalized_idx")
+  @@index([businessId, phoneE164], map: "contacts_business_phone_e164_idx")
+  @@index([businessId, companyCodeNormalized], map: "contacts_business_company_code_normalized_idx")
+  @@index([businessId, vatCodeNormalized], map: "contacts_business_vat_code_normalized_idx")
+  @@map("contacts")
+}

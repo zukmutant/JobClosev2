@@ -17,6 +17,10 @@ export type CreateContactResult =
   | {
       ok: false;
       reason: "invalidInput" | "emptyContact" | "duplicateContact";
+      /**
+       * For duplicateContact, contactId is present only when a pre-create lookup
+       * found the row. A database unique constraint race may return reason only.
+       */
       duplicate?: BlockingContactDuplicate;
     };
 

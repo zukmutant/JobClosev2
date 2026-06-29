@@ -2,6 +2,10 @@ import type { Contact, ContactCreateRecord } from "./contact.ts";
 import type { ContactDuplicateLookup } from "./contact-creation-rules.ts";
 
 export type BlockingContactDuplicate = {
+  /**
+   * Present when a duplicate is found by lookup before create. Database unique
+   * constraint races may only identify the blocking reason, not the row id.
+   */
   contactId?: string;
   reason: "email" | "phone" | "companyCode" | "vatCode" | "name";
 };

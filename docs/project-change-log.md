@@ -2,6 +2,17 @@
 
 ## 2026-06-29
 
+- Task summary: Documented the duplicateContact result contract for database unique constraint races.
+- Files changed:
+  - `lib/contacts/contact-repository.ts`
+  - `lib/contacts/create-contact-service.ts`
+  - `lib/contacts/create-contact-service.test.ts`
+  - `docs/project-change-log.md`
+- Behavior changed: None. Documented that duplicateContact may include `duplicate.reason` without `duplicate.contactId` when created from a database unique constraint race.
+- Behavior not changed: No UI, Server Action, API route, schema, migration, repository strategy, duplicate behavior, auth/business context, parsing, normalization, email logic, phone logic, or contact creation flow was changed.
+- Validation run: `npx prisma validate` passed with a process-only `DATABASE_URL` from `.env.example`; `npm run build`, `npm run test:ci`, and `git diff --check` passed.
+- Next recommended task: Add the Server Action boundary only after approving how trusted `businessId` is obtained for the MVP.
+
 - Task summary: Fixed backend duplicate safety for Contact creation.
 - Files changed:
   - `lib/contacts/contact-repository.ts`

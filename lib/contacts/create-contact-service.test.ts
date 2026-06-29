@@ -31,6 +31,12 @@ test("createContact returns duplicateContact when repository create hits a uniqu
     reason: "duplicateContact",
     duplicate: { reason: "email" },
   });
+
+  if (result.ok || result.reason !== "duplicateContact" || result.duplicate === undefined) {
+    assert.fail("Expected duplicateContact result with duplicate detail");
+  }
+
+  assert.equal("contactId" in result.duplicate, false);
 });
 
 class DuplicateOnCreateRepository implements ContactRepository {

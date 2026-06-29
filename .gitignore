@@ -1,0 +1,7 @@
+node_modules/
+.next/
+out/
+.env*
+next-dev.out.log
+next-dev.err.log
+node_modules

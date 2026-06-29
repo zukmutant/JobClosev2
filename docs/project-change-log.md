@@ -2,6 +2,18 @@
 
 ## 2026-06-29
 
+- Task summary: Added Contact create input preparation before the service call.
+- Files changed:
+  - `lib/contacts/contact-preparation.ts`
+  - `lib/contacts/contact-preparation.test.ts`
+  - `lib/contacts/create-contact-action-runner.ts`
+  - `lib/contacts/create-contact-action.test.ts`
+  - `docs/project-change-log.md`
+- Behavior changed: Server Action input now trims text, prepares normalized name/company fields, normalizes direct email input with `emailDomain`, normalizes typed company/VAT codes, and passes prepared input to the existing create-contact service.
+- Behavior not changed: No UI, auth implementation, phone parser internals, persistence schema, service behavior, repository behavior, contact form, email extractor, or phone E.164 preparation was added.
+- Validation run: `npx prisma validate` passed with a process-only `DATABASE_URL` from `.env.example`; `npm run test:ci`, `npm run build`, and `git diff --check` passed.
+- Next recommended task: Add the minimal contact form UI only after approving the exact MVP form fields and submit-state behavior.
+
 - Task summary: Added the Contact create Server Action boundary.
 - Files changed:
   - `lib/contacts/create-contact-action.ts`

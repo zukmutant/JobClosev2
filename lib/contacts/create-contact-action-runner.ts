@@ -2,6 +2,7 @@ import type { TrustedBusinessContext } from "../server/business-context.ts";
 import type { ContactRepository } from "./contact-repository.ts";
 import type { CreateContactResult } from "./create-contact-service.ts";
 import { createContact } from "./create-contact-service.ts";
+import { prepareContactCreateInput } from "./contact-preparation.ts";
 import { createContactInputSchema } from "./contact-validation.ts";
 
 type CreateContactActionDependencies = {
@@ -21,11 +22,12 @@ export async function runCreateContactAction(
   }
 
   const { businessId } = dependencies.getBusinessContext();
+  const preparedInput = prepareContactCreateInput(validation.data);
 
   return dependencies.createContactService(
     {
       businessId,
-      input: validation.data,
+      input: preparedInput,
     },
     dependencies.repository,
   );

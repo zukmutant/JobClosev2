@@ -60,6 +60,7 @@ test("create contact action uses trusted server business context", async () => {
     businessId: trustedBusinessId,
     input: {
       firstName: "Ada",
+      firstNameNormalized: "ada",
     },
   });
   assert.equal(capturedRepository, repository);

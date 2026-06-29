@@ -2,6 +2,16 @@
 
 ## 2026-06-29
 
+- Task summary: Created the initial Contact table Prisma migration with required PostgreSQL constraints.
+- Files changed:
+  - `prisma/migrations/20260629190746_create_contact_table/migration.sql`
+  - `prisma/migrations/migration_lock.toml`
+  - `docs/project-change-log.md`
+- Behavior changed: Added database migration SQL for the `contacts` table, `gen_random_uuid()` support, active-only partial unique indexes, and a trim-based non-empty contact check.
+- Behavior not changed: No app UI, service, repository, server action, contact creation logic, Business/User/Auth models, or business-context behavior was added.
+- Validation run: `npx prisma migrate dev`, `npx prisma validate`, `npm run build`, `npm run test:ci`, and `git diff --check` passed.
+- Next recommended task: Add database-level migration verification tests for the Contact table constraints before implementing contact creation services.
+
 - Task summary: Added Docker Compose PostgreSQL setup for local development.
 - Files changed:
   - `docker-compose.yml`

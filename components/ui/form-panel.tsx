@@ -91,11 +91,13 @@ export function FormFooter({ children }: Readonly<{ children: ReactNode }>) {
 
 export function UiSubmitButton({
   children,
+  disabled,
 }: Readonly<{
   children: ReactNode;
+  disabled?: boolean;
 }>) {
   return (
-    <Button type="submit" color="teal" radius="sm">
+    <Button type="submit" color="teal" radius="sm" disabled={disabled}>
       {children}
     </Button>
   );

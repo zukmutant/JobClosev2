@@ -2,6 +2,16 @@
 
 ## 2026-06-30
 
+- Task summary: Fixed Contact form submit disabled state.
+- Files changed:
+  - `app/contact-creation-form.tsx`
+  - `components/ui/form-panel.tsx`
+  - `docs/project-change-log.md`
+- Behavior changed: The Contact Creation submit button is now disabled while a submit is pending and while all five main visible fields are empty.
+- Behavior not changed: Contact fields, layout, UI wrappers, phone-channel visibility, Server Action submit path, backend behavior, schema, persistence, duplicate rules, parser behavior, and product flow were not changed.
+- Validation run: `npm run test:ci`, `npm run build`, and `git diff --check` passed.
+- Next recommended task: Add a focused rendered UI test for the Contact Creation form submit button disabled state.
+
 - Task summary: Refactored the Contact Creation form to approved UI wrappers.
 - Files changed:
   - `app/page.tsx`

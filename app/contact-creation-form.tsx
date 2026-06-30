@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 
 import {
@@ -26,19 +26,56 @@ export function ContactCreationForm() {
     submitContactCreationForm,
     initialContactCreationFormState,
   );
-  const [phone, setPhone] = useState("");
-  const hasPhone = phone.trim().length > 0;
+  const [formValues, setFormValues] = useState({
+    firstName: "",
+    lastName: "",
+    companyName: "",
+    email: "",
+    phone: "",
+  });
+  const hasPhone = formValues.phone.trim().length > 0;
+  const isEmptyContact = Object.values(formValues).every((value) => value.trim().length === 0);
 
   const statusTone = getStatusTone(state.status);
+
+  useEffect(() => {
+    if (state.status !== "idle") {
+      setFormValues({
+        firstName: "",
+        lastName: "",
+        companyName: "",
+        email: "",
+        phone: "",
+      });
+    }
+  }, [state.status]);
 
   return (
     <FormPanel action={formAction}>
       <FormTitle>Create contact</FormTitle>
 
       <FormGrid>
-        <UiTextInput name="firstName" label="First name" type="text" autoComplete="given-name" />
+        <UiTextInput
+          name="firstName"
+          label="First name"
+          type="text"
+          autoComplete="given-name"
+          value={formValues.firstName}
+          onChange={(event) =>
+            setFormValues((current) => ({ ...current, firstName: event.currentTarget.value }))
+          }
+        />
 
-        <UiTextInput name="lastName" label="Last name" type="text" autoComplete="family-name" />
+        <UiTextInput
+          name="lastName"
+          label="Last name"
+          type="text"
+          autoComplete="family-name"
+          value={formValues.lastName}
+          onChange={(event) =>
+            setFormValues((current) => ({ ...current, lastName: event.currentTarget.value }))
+          }
+        />
 
         <FormGridFull>
           <UiTextInput
@@ -46,18 +83,33 @@ export function ContactCreationForm() {
             label="Company name"
             type="text"
             autoComplete="organization"
+            value={formValues.companyName}
+            onChange={(event) =>
+              setFormValues((current) => ({ ...current, companyName: event.currentTarget.value }))
+            }
           />
         </FormGridFull>
 
-        <UiTextInput name="email" label="Email" type="email" autoComplete="email" />
+        <UiTextInput
+          name="email"
+          label="Email"
+          type="email"
+          autoComplete="email"
+          value={formValues.email}
+          onChange={(event) =>
+            setFormValues((current) => ({ ...current, email: event.currentTarget.value }))
+          }
+        />
 
         <UiTextInput
           name="phone"
           label="Phone"
           type="tel"
           autoComplete="tel"
-          value={phone}
-          onChange={(event) => setPhone(event.currentTarget.value)}
+          value={formValues.phone}
+          onChange={(event) =>
+            setFormValues((current) => ({ ...current, phone: event.currentTarget.value }))
+          }
         />
       </FormGrid>
 
@@ -70,18 +122,20 @@ export function ContactCreationForm() {
       ) : null}
 
       <FormFooter>
-        <SubmitButton />
+        <SubmitButton disabledWhenEmpty={isEmptyContact} />
         <FormStatus tone={statusTone}>{state.message}</FormStatus>
       </FormFooter>
     </FormPanel>
   );
 }
 
-function SubmitButton() {
+function SubmitButton({ disabledWhenEmpty }: Readonly<{ disabledWhenEmpty: boolean }>) {
   const { pending } = useFormStatus();
 
   return (
-    <UiSubmitButton>{pending ? "Saving..." : "Create contact"}</UiSubmitButton>
+    <UiSubmitButton disabled={pending || disabledWhenEmpty}>
+      {pending ? "Saving..." : "Create contact"}
+    </UiSubmitButton>
   );
 }
 

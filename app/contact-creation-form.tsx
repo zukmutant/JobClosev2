@@ -34,7 +34,7 @@ export function ContactCreationForm() {
     phone: "",
   });
   const hasPhone = formValues.phone.trim().length > 0;
-  const isEmptyContact = Object.values(formValues).every((value) => value.trim().length === 0);
+  const isMissingContactMethod = formValues.email.trim().length === 0 && !hasPhone;
 
   const statusTone = getStatusTone(state.status);
 
@@ -114,18 +114,20 @@ export function ContactCreationForm() {
       ) : null}
 
       <FormFooter>
-        <SubmitButton disabledWhenEmpty={isEmptyContact} />
+        <SubmitButton disabledWhenMissingContactMethod={isMissingContactMethod} />
         <FormStatus tone={statusTone}>{state.message}</FormStatus>
       </FormFooter>
     </FormPanel>
   );
 }
 
-function SubmitButton({ disabledWhenEmpty }: Readonly<{ disabledWhenEmpty: boolean }>) {
+function SubmitButton({
+  disabledWhenMissingContactMethod,
+}: Readonly<{ disabledWhenMissingContactMethod: boolean }>) {
   const { pending } = useFormStatus();
 
   return (
-    <UiSubmitButton disabled={pending || disabledWhenEmpty}>
+    <UiSubmitButton disabled={pending || disabledWhenMissingContactMethod}>
       {pending ? "Saving..." : "Create contact"}
     </UiSubmitButton>
   );

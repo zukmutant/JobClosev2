@@ -1,14 +1,8 @@
 import type { ContactCreateInput, PreparedContactCreateInput } from "./contact.ts";
 
-const usefulContactFields = [
-  "firstName",
-  "lastName",
-  "displayName",
-  "companyName",
+const manualContactRequiredFields = [
   "email",
   "phone",
-  "companyCode",
-  "vatCode",
 ] as const satisfies readonly (keyof ContactCreateInput)[];
 
 export type PreciseContactDuplicateField =
@@ -38,8 +32,8 @@ export type ContactDuplicateLookup =
       businessId: string;
     };
 
-export function hasNonEmptyContactField(input: ContactCreateInput): boolean {
-  return usefulContactFields.some((field) => hasText(input[field]));
+export function hasRequiredManualContactField(input: ContactCreateInput): boolean {
+  return manualContactRequiredFields.some((field) => hasText(input[field]));
 }
 
 export function selectContactDuplicateLookup(

@@ -2,6 +2,23 @@
 
 ## 2026-06-30
 
+- Task summary: Updated Contact Creation MVP minimum rule to require email or phone.
+- Files changed:
+  - `docs/features/create-contact-mvp.md`
+  - `lib/contacts/contact-creation-rules.ts`
+  - `lib/contacts/contact-creation-rules.test.ts`
+  - `lib/contacts/create-contact-service.ts`
+  - `lib/contacts/create-contact-service.test.ts`
+  - `lib/contacts/create-contact-action.test.ts`
+  - `lib/contacts/create-contact-form-action-runner.ts`
+  - `lib/contacts/create-contact-form-action.test.ts`
+  - `app/contact-creation-form.tsx`
+  - `docs/project-change-log.md`
+- Behavior changed: Manual contact creation now requires a non-empty email or phone; name-only and company-only contacts are rejected as `emptyContact`, and the UI submit button stays disabled until email or phone is present.
+- Behavior not changed: Existing Contact form fields, phone-channel visibility, UI wrappers, Server Action path, persistence schema, duplicate persistence indexes, parser UI, contact list, edit, delete, search, and AI behavior were not changed.
+- Validation run: `npm run test:ci`, `npm run build`, manual browser verification, and `git diff --check` passed.
+- Next recommended task: Add an approved rendered UI regression test for name-only disabled submit and email/phone-enabled submit.
+
 - Task summary: Preserved Contact Creation form values on submit errors.
 - Files changed:
   - `app/contact-creation-form.tsx`

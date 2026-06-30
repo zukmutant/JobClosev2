@@ -51,7 +51,7 @@ function toContactCreationFormState(result: CreateContactResult): ContactCreatio
   if (result.reason === "emptyContact") {
     return {
       status: "emptyContact",
-      message: "Enter at least one contact field.",
+      message: "Enter an email or phone.",
     };
   }
 

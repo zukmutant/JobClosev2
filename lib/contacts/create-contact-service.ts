@@ -1,7 +1,10 @@
 import type { PreparedContactCreateInput } from "./contact.ts";
 import type { BlockingContactDuplicate, ContactRepository } from "./contact-repository.ts";
 import { isDuplicateContactError } from "./contact-repository.ts";
-import { hasNonEmptyContactField, selectContactDuplicateLookup } from "./contact-creation-rules.ts";
+import {
+  hasRequiredManualContactField,
+  selectContactDuplicateLookup,
+} from "./contact-creation-rules.ts";
 import { preparedContactCreateInputSchema } from "./contact-validation.ts";
 
 export type CreateContactCommand = {
@@ -34,7 +37,7 @@ export async function createContact(
     return { ok: false, reason: "invalidInput" };
   }
 
-  if (!hasNonEmptyContactField(command.input)) {
+  if (!hasRequiredManualContactField(command.input)) {
     return { ok: false, reason: "emptyContact" };
   }
 

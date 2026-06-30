@@ -7,7 +7,7 @@ The user must be able to create a contact inside the current business.
 ## Included in the MVP
 
 - accept contact data;
-- verify that the contact is not empty;
+- verify that a manual contact has email or phone;
 - prepare data for future search;
 - store the email domain as a linking field;
 - check duplicates inside the current business;
@@ -34,7 +34,9 @@ The following fields may be provided when creating a contact:
 
 ## Minimum rule
 
-At least one non-empty useful field must be provided to create a contact.
+A manual contact must include a non-empty email or phone value.
+
+Name-only and company-only contacts cannot be created manually.
 
 A fully empty contact cannot be created.
 
@@ -84,7 +86,7 @@ Blocking duplicates are:
 - same prepared company code;
 - same prepared VAT code.
 
-If the new contact has no prepared email, prepared phone, prepared company code, or prepared VAT code, then an identical first name / last name / display name / company name inside the current business blocks creation.
+If the new manual contact includes email or phone but has no prepared email, prepared phone, prepared company code, or prepared VAT code, then an identical first name / last name / display name / company name inside the current business blocks creation.
 
 The email domain is not treated as a duplicate key.
 
@@ -148,7 +150,8 @@ Do not create a unique index for first name, last name, display name, or company
 ## Readiness checks
 
 - an empty contact cannot be created;
-- a contact can be created with only a first name;
+- a name-only contact cannot be created manually;
+- a company-only contact cannot be created manually;
 - a contact can be created with only an email;
 - a contact can be created with only a phone number;
 - the email domain is stored;

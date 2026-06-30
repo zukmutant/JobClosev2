@@ -50,7 +50,7 @@ test("contact creation form action maps creation result states", async () => {
     await runContactCreationFormAction(formData, async () => ({ ok: false, reason: "emptyContact" })),
     {
       status: "emptyContact",
-      message: "Enter at least one contact field.",
+      message: "Enter an email or phone.",
     },
   );
 

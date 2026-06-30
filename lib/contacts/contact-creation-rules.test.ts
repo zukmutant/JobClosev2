@@ -2,16 +2,16 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
-  hasNonEmptyContactField,
+  hasRequiredManualContactField,
   selectContactDuplicateLookup,
 } from "./contact-creation-rules.ts";
 
 const businessId = "11111111-1111-4111-8111-111111111111";
 
-test("empty contact decision treats missing and whitespace-only useful fields as empty", () => {
-  assert.equal(hasNonEmptyContactField({}), false);
+test("manual contact minimum decision treats missing and whitespace-only contact methods as empty", () => {
+  assert.equal(hasRequiredManualContactField({}), false);
   assert.equal(
-    hasNonEmptyContactField({
+    hasRequiredManualContactField({
       firstName: " ",
       lastName: "\t",
       displayName: "",
@@ -25,10 +25,14 @@ test("empty contact decision treats missing and whitespace-only useful fields as
   );
 });
 
-test("empty contact decision accepts one useful non-empty field", () => {
-  assert.equal(hasNonEmptyContactField({ firstName: "Ada" }), true);
-  assert.equal(hasNonEmptyContactField({ email: "ada@example.test" }), true);
-  assert.equal(hasNonEmptyContactField({ phone: "+37061234567" }), true);
+test("manual contact minimum decision rejects name-only and company-only contacts", () => {
+  assert.equal(hasRequiredManualContactField({ firstName: "Ada" }), false);
+  assert.equal(hasRequiredManualContactField({ companyName: "Analytical Engines" }), false);
+});
+
+test("manual contact minimum decision accepts email or phone", () => {
+  assert.equal(hasRequiredManualContactField({ email: "ada@example.test" }), true);
+  assert.equal(hasRequiredManualContactField({ phone: "+37061234567" }), true);
 });
 
 test("duplicate decision uses precise prepared fields before name fields", () => {

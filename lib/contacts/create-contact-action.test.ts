@@ -39,7 +39,7 @@ test("create contact action uses trusted server business context", async () => {
 
   const result = await runCreateContactAction(
     {
-      firstName: "Ada",
+      email: "Ada@Example.test",
     },
     {
       getBusinessContext: () => ({ businessId: trustedBusinessId }),
@@ -59,8 +59,9 @@ test("create contact action uses trusted server business context", async () => {
   assert.deepEqual(capturedCommand, {
     businessId: trustedBusinessId,
     input: {
-      firstName: "Ada",
-      firstNameNormalized: "ada",
+      email: "Ada@Example.test",
+      emailNormalized: "ada@example.test",
+      emailDomain: "example.test",
     },
   });
   assert.equal(capturedRepository, repository);

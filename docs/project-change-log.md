@@ -1,5 +1,16 @@
 # Project Change Log
 
+## 2026-07-01
+
+- Task summary: Fixed repeated Contact Creation submit after successful create.
+- Files changed:
+  - `app/contact-creation-form.tsx`
+  - `docs/project-change-log.md`
+- Behavior changed: After every successful contact creation, the Contact form clears all visible fields, hides phone channels, resets checked phone-channel controls, and disables submit because the form is empty.
+- Behavior not changed: Error results still preserve entered values; Contact fields, UI wrappers, phone-channel visibility rule, Server Action path, backend behavior, duplicate rules, persistence schema, and phone parser behavior were not changed.
+- Validation run: `npm run test:ci`, `npm run build`, manual browser verification, and `git diff --check` passed.
+- Next recommended task: Add a rendered UI regression test for successful submit clearing values and phone-channel checkbox state once the UI test harness is approved.
+
 ## 2026-06-30
 
 - Task summary: Improved Contact Creation duplicate feedback.

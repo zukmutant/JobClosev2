@@ -33,6 +33,7 @@ export function ContactCreationForm() {
     email: "",
     phone: "",
   });
+  const [formResetKey, setFormResetKey] = useState(0);
   const hasPhone = formValues.phone.trim().length > 0;
   const isMissingContactMethod = formValues.email.trim().length === 0 && !hasPhone;
 
@@ -47,11 +48,12 @@ export function ContactCreationForm() {
         email: "",
         phone: "",
       });
+      setFormResetKey((current) => current + 1);
     }
-  }, [state.status]);
+  }, [state]);
 
   return (
-    <FormPanel action={formAction}>
+    <FormPanel action={formAction} key={formResetKey}>
       <FormTitle>Create contact</FormTitle>
 
       <FormGrid>

@@ -2,6 +2,15 @@
 
 ## 2026-06-30
 
+- Task summary: Preserved Contact Creation form values on submit errors.
+- Files changed:
+  - `app/contact-creation-form.tsx`
+  - `docs/project-change-log.md`
+- Behavior changed: Contact Creation form fields now clear only after a successful submit and preserve entered values after `invalidInput`, `emptyContact`, and `duplicateContact` results.
+- Behavior not changed: Contact fields, layout, UI wrappers, phone-channel visibility, submit disabled rule, Server Action submit path, backend behavior, schema, persistence, duplicate rules, parser behavior, and product flow were not changed.
+- Validation run: `npm run test:ci`, `npm run build`, manual browser verification, and `git diff --check` passed.
+- Next recommended task: Add a rendered UI regression test for Contact Creation submit-result field preservation once a UI test harness is approved.
+
 - Task summary: Fixed Contact Creation form input change runtime crash.
 - Files changed:
   - `app/contact-creation-form.tsx`

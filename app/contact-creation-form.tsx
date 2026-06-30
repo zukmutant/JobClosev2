@@ -39,7 +39,7 @@ export function ContactCreationForm() {
   const statusTone = getStatusTone(state.status);
 
   useEffect(() => {
-    if (state.status !== "idle") {
+    if (state.status === "success") {
       setFormValues({
         firstName: "",
         lastName: "",

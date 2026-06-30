@@ -1,17 +1,10 @@
 import { ContactCreationForm } from "./contact-creation-form";
+import { PageShell } from "../components/ui/page-shell";
 
 export default function HomePage() {
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        display: "grid",
-        placeItems: "center",
-        padding: 24,
-        background: "#f4f7f5",
-      }}
-    >
+    <PageShell>
       <ContactCreationForm />
-    </main>
+    </PageShell>
   );
 }

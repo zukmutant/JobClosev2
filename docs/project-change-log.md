@@ -2,6 +2,18 @@
 
 ## 2026-06-30
 
+- Task summary: Refactored the Contact Creation form to approved UI wrappers.
+- Files changed:
+  - `app/page.tsx`
+  - `app/contact-creation-form.tsx`
+  - `components/ui/form-panel.tsx`
+  - `components/ui/page-shell.tsx`
+  - `docs/project-change-log.md`
+- Behavior changed: None intended. The existing contact creation form now renders through generic `components/ui/**` wrappers backed by Mantine instead of raw inline-styled form elements.
+- Behavior not changed: Contact fields, phone-channel visibility, submit through the existing Server Action, pending/success/invalid/empty/duplicate result states, backend behavior, schema, persistence, duplicate rules, parser behavior, and product flow were not changed.
+- Validation run: `npm run test:ci`, `npm run build`, and `git diff --check` passed.
+- Next recommended task: Add a user-behavior UI test setup for the contact creation form so phone-channel visibility and submit-state rendering can be covered through rendered UI interactions.
+
 - Task summary: Implemented the minimal Contact Creation MVP UI.
 - Files changed:
   - `app/page.tsx`

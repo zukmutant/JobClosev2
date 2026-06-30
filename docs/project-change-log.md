@@ -1,5 +1,21 @@
 # Project Change Log
 
+## 2026-06-30
+
+- Task summary: Implemented the minimal Contact Creation MVP UI.
+- Files changed:
+  - `app/page.tsx`
+  - `app/contact-creation-form.tsx`
+  - `lib/contacts/contact-creation-form-state.ts`
+  - `lib/contacts/create-contact-form-action.ts`
+  - `lib/contacts/create-contact-form-action-runner.ts`
+  - `lib/contacts/create-contact-form-action.test.ts`
+  - `docs/project-change-log.md`
+- Behavior changed: The home page now shows one contact creation form with first name, last name, company name, email, and phone fields; phone channel checkboxes for SMS, WhatsApp, and Telegram appear only while a phone value is present; submit uses the existing Contact create Server Action through a form adapter; pending, success, invalid input, empty contact, and duplicate contact states are rendered.
+- Behavior not changed: No businessId input, display-only internal fields, contact list, edit, delete, search, AI, parser UI, schema change, repository behavior change, duplicate rule change, or new persistence model was added.
+- Validation run: `npm run test:ci`, `npm run build`, and `git diff --check` passed.
+- Next recommended task: Add a user-behavior UI test setup for the contact creation form so phone-channel visibility and submit-state rendering can be covered without relying only on adapter unit tests.
+
 ## 2026-06-29
 
 - Task summary: Fixed Contact preparation edge cases.

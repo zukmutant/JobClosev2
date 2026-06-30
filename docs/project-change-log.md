@@ -2,6 +2,21 @@
 
 ## 2026-06-30
 
+- Task summary: Improved Contact Creation duplicate feedback.
+- Files changed:
+  - `docs/features/create-contact-mvp.md`
+  - `lib/contacts/contact-repository.ts`
+  - `lib/contacts/prisma-contact-repository.ts`
+  - `lib/contacts/prisma-contact-repository.test.ts`
+  - `lib/contacts/contact-creation-form-state.ts`
+  - `lib/contacts/create-contact-form-action-runner.ts`
+  - `lib/contacts/create-contact-form-action.test.ts`
+  - `docs/project-change-log.md`
+- Behavior changed: Duplicate contact results now include matched reason plus existing contact display data when a known matching contact row is found, and the Contact Creation form message names the matched reason and readable existing contact label. Duplicate races without a known row keep generic reason-based feedback.
+- Behavior not changed: Duplicate matching rules, Contact form fields, UI layout, phone-channel visibility, Server Action path, persistence schema, contact list, edit, delete, search, parser UI, and AI behavior were not changed.
+- Validation run: `npm run test:ci`, `npm run build`, manual browser verification, and `git diff --check` passed.
+- Next recommended task: Add a rendered UI regression test for duplicate feedback once the UI test harness is approved.
+
 - Task summary: Updated Contact Creation MVP minimum rule to require email or phone.
 - Files changed:
   - `docs/features/create-contact-mvp.md`

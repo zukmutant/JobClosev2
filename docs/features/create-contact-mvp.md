@@ -90,6 +90,17 @@ If the new manual contact includes email or phone but has no prepared email, pre
 
 The email domain is not treated as a duplicate key.
 
+## Duplicate feedback
+
+When a duplicate lookup identifies an existing contact row, the duplicate result includes:
+
+- contact id;
+- matched reason: email, phone, company code, VAT code, or name;
+- readable existing contact label using available name, company, email, and phone fields;
+- existing email, phone, and company name when available.
+
+When a duplicate is detected without a known existing contact id, such as a database unique constraint race, the duplicate result includes the matched reason when known and the UI shows a generic duplicate message based on that reason.
+
 ## Persistence
 
 The system adds these fields itself:

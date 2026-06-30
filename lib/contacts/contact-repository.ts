@@ -8,6 +8,12 @@ export type BlockingContactDuplicate = {
    */
   contactId?: string;
   reason: "email" | "phone" | "companyCode" | "vatCode" | "name";
+  existingContact?: {
+    label: string;
+    email?: string;
+    phone?: string;
+    companyName?: string;
+  };
 };
 
 export type BlockingContactDuplicateLookup = Exclude<ContactDuplicateLookup, { kind: "none" }>;

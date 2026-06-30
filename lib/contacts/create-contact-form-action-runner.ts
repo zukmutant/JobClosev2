@@ -1,4 +1,5 @@
 import type { ContactCreationFormState } from "./contact-creation-form-state.ts";
+import type { BlockingContactDuplicate } from "./contact-repository.ts";
 import type { CreateContactResult } from "./create-contact-service.ts";
 
 export async function runContactCreationFormAction(
@@ -55,8 +56,40 @@ function toContactCreationFormState(result: CreateContactResult): ContactCreatio
     };
   }
 
-  return {
+  const duplicateState: ContactCreationFormState = {
     status: "duplicateContact",
-    message: "Duplicate contact. This contact already exists.",
+    message: getDuplicateContactMessage(result.duplicate),
   };
+
+  if (result.duplicate !== undefined) {
+    duplicateState.duplicate = result.duplicate;
+  }
+
+  return duplicateState;
+}
+
+function getDuplicateContactMessage(duplicate: BlockingContactDuplicate | undefined): string {
+  if (duplicate === undefined) {
+    return "Duplicate contact. This contact already exists.";
+  }
+
+  const reason = getDuplicateReasonLabel(duplicate.reason);
+
+  if (duplicate.contactId !== undefined && duplicate.existingContact !== undefined) {
+    return `Duplicate contact. Matched by ${reason}: ${duplicate.existingContact.label}.`;
+  }
+
+  return `Duplicate contact. Matched by ${reason}.`;
+}
+
+function getDuplicateReasonLabel(reason: BlockingContactDuplicate["reason"]): string {
+  if (reason === "companyCode") {
+    return "company code";
+  }
+
+  if (reason === "vatCode") {
+    return "VAT code";
+  }
+
+  return reason;
 }

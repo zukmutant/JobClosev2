@@ -58,6 +58,52 @@ test("contact creation form action maps creation result states", async () => {
     await runContactCreationFormAction(formData, async () => ({
       ok: false,
       reason: "duplicateContact",
+      duplicate: {
+        contactId: "22222222-2222-4222-8222-222222222222",
+        reason: "email",
+        existingContact: {
+          label: "Ada Lovelace · Analytical Engines · ada@example.test",
+          email: "ada@example.test",
+          companyName: "Analytical Engines",
+        },
+      },
+    })),
+    {
+      status: "duplicateContact",
+      message: "Duplicate contact. Matched by email: Ada Lovelace · Analytical Engines · ada@example.test.",
+      duplicate: {
+        contactId: "22222222-2222-4222-8222-222222222222",
+        reason: "email",
+        existingContact: {
+          label: "Ada Lovelace · Analytical Engines · ada@example.test",
+          email: "ada@example.test",
+          companyName: "Analytical Engines",
+        },
+      },
+    },
+  );
+
+  assert.deepEqual(
+    await runContactCreationFormAction(formData, async () => ({
+      ok: false,
+      reason: "duplicateContact",
+      duplicate: {
+        reason: "companyCode",
+      },
+    })),
+    {
+      status: "duplicateContact",
+      message: "Duplicate contact. Matched by company code.",
+      duplicate: {
+        reason: "companyCode",
+      },
+    },
+  );
+
+  assert.deepEqual(
+    await runContactCreationFormAction(formData, async () => ({
+      ok: false,
+      reason: "duplicateContact",
     })),
     {
       status: "duplicateContact",

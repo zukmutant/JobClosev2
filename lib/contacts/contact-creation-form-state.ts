@@ -1,3 +1,5 @@
+import type { BlockingContactDuplicate } from "./contact-repository.ts";
+
 export type ContactCreationFormState =
   | {
       status: "idle";
@@ -8,8 +10,13 @@ export type ContactCreationFormState =
       message: string;
     }
   | {
-      status: "invalidInput" | "emptyContact" | "duplicateContact";
+      status: "invalidInput" | "emptyContact";
       message: string;
+    }
+  | {
+      status: "duplicateContact";
+      message: string;
+      duplicate?: BlockingContactDuplicate;
     };
 
 export const initialContactCreationFormState: ContactCreationFormState = {

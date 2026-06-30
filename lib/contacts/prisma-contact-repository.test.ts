@@ -12,6 +12,11 @@ test("Prisma repository builds active precise duplicate lookup with prepared val
   const delegate = new FakeContactDelegate({
     id: "22222222-2222-4222-8222-222222222222",
     businessId,
+    firstName: "Ada",
+    lastName: "Lovelace",
+    companyName: "Analytical Engines",
+    email: "Ada@Example.test",
+    phone: "+370 600 00000",
     emailNormalized: "ada@example.test",
   });
   const repository = new PrismaContactRepository(delegate);
@@ -38,6 +43,12 @@ test("Prisma repository builds active precise duplicate lookup with prepared val
   assert.deepEqual(duplicate, {
     contactId: "22222222-2222-4222-8222-222222222222",
     reason: "email",
+    existingContact: {
+      label: "Ada Lovelace · Analytical Engines · Ada@Example.test · +370 600 00000",
+      email: "Ada@Example.test",
+      phone: "+370 600 00000",
+      companyName: "Analytical Engines",
+    },
   });
 });
 
@@ -45,8 +56,10 @@ test("Prisma repository builds active name duplicate lookup as an exact normaliz
   const delegate = new FakeContactDelegate({
     id: "22222222-2222-4222-8222-222222222222",
     businessId,
+    displayName: "Ada Lovelace",
     firstNameNormalized: "ada",
     lastNameNormalized: "lovelace",
+    email: "ada@example.test",
   });
   const repository = new PrismaContactRepository(delegate);
 
@@ -73,6 +86,12 @@ test("Prisma repository builds active name duplicate lookup as an exact normaliz
   assert.deepEqual(duplicate, {
     contactId: "22222222-2222-4222-8222-222222222222",
     reason: "name",
+    existingContact: {
+      label: "Ada Lovelace · ada@example.test",
+      email: "ada@example.test",
+      phone: undefined,
+      companyName: undefined,
+    },
   });
 });
 

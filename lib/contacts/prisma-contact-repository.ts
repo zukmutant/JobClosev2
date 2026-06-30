@@ -116,7 +116,7 @@ export class PrismaContactRepository implements ContactRepository {
       return null;
     }
 
-    return { contactId: contact.id, reason };
+    return toBlockingDuplicate(contact, reason);
   }
 
   private async findNameDuplicate(
@@ -140,10 +140,7 @@ export class PrismaContactRepository implements ContactRepository {
       return null;
     }
 
-    return {
-      contactId: contact.id,
-      reason: "name",
-    };
+    return toBlockingDuplicate(contact, "name");
   }
 }
 
@@ -227,6 +224,44 @@ function getConstraintTarget(error: Prisma.PrismaClientKnownRequestError): strin
 
 function includesAny(value: string, needles: string[]): boolean {
   return needles.some((needle) => value.includes(needle));
+}
+
+function toBlockingDuplicate(
+  contact: PrismaContact,
+  reason: BlockingContactDuplicate["reason"],
+): BlockingContactDuplicate {
+  return {
+    contactId: contact.id,
+    reason,
+    existingContact: {
+      label: getContactLabel(contact),
+      email: textOrUndefined(contact.email),
+      phone: textOrUndefined(contact.phone),
+      companyName: textOrUndefined(contact.companyName),
+    },
+  };
+}
+
+function getContactLabel(contact: PrismaContact): string {
+  const name = textOrUndefined(contact.displayName) ?? joinText(contact.firstName, contact.lastName);
+  const parts = [
+    name,
+    textOrUndefined(contact.companyName),
+    textOrUndefined(contact.email),
+    textOrUndefined(contact.phone),
+  ].filter((value) => value !== undefined);
+
+  return parts.length > 0 ? parts.join(" · ") : "Existing contact";
+}
+
+function joinText(...values: (string | null)[]): string | undefined {
+  const parts = values.map(textOrUndefined).filter((value) => value !== undefined);
+
+  return parts.length > 0 ? parts.join(" ") : undefined;
+}
+
+function textOrUndefined(value: string | null): string | undefined {
+  return value !== null && value.trim().length > 0 ? value : undefined;
 }
 
 function toContact(contact: PrismaContact): Contact {

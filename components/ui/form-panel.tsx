@@ -20,6 +20,7 @@ type FormPanelProps = Omit<ComponentPropsWithoutRef<"form">, "style" | "classNam
 
 type UiTextInputProps = Omit<ComponentPropsWithoutRef<"input">, "style" | "className" | "size"> & {
   label: string;
+  onValueChange?: (value: string) => void;
 };
 
 type StatusTone = "neutral" | "success" | "error";
@@ -54,8 +55,23 @@ export function FormGridFull({ children }: Readonly<{ children: ReactNode }>) {
   return <Stack style={{ gridColumn: "1 / -1" }}>{children}</Stack>;
 }
 
-export function UiTextInput({ label, ...props }: Readonly<UiTextInputProps>) {
-  return <TextInput label={label} size="md" {...props} />;
+export function UiTextInput({
+  label,
+  onChange,
+  onValueChange,
+  ...props
+}: Readonly<UiTextInputProps>) {
+  return (
+    <TextInput
+      label={label}
+      size="md"
+      onChange={(event) => {
+        onChange?.(event);
+        onValueChange?.(event.currentTarget.value);
+      }}
+      {...props}
+    />
+  );
 }
 
 export function CheckboxSet({

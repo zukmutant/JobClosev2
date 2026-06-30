@@ -2,6 +2,16 @@
 
 ## 2026-06-30
 
+- Task summary: Fixed Contact Creation form input change runtime crash.
+- Files changed:
+  - `app/contact-creation-form.tsx`
+  - `components/ui/form-panel.tsx`
+  - `docs/project-change-log.md`
+- Behavior changed: Controlled Contact form inputs now receive string values from the UI wrapper instead of reading `event.currentTarget.value` inside deferred state updates, preventing the client runtime crash while typing.
+- Behavior not changed: Contact fields, UI wrapper usage, layout, phone-channel visibility rule, submit disabled rule, Server Action submit path, backend behavior, schema, persistence, duplicate rules, parser behavior, and product flow were not changed.
+- Validation run: `npm run test:ci`, `npm run build`, manual browser verification, and `git diff --check` passed.
+- Next recommended task: Add a rendered UI regression test for typing in Contact Creation fields and verifying phone-channel visibility.
+
 - Task summary: Fixed Contact form submit disabled state.
 - Files changed:
   - `app/contact-creation-form.tsx`

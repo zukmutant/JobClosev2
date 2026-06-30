@@ -61,9 +61,7 @@ export function ContactCreationForm() {
           type="text"
           autoComplete="given-name"
           value={formValues.firstName}
-          onChange={(event) =>
-            setFormValues((current) => ({ ...current, firstName: event.currentTarget.value }))
-          }
+          onValueChange={(value) => setFormValues((current) => ({ ...current, firstName: value }))}
         />
 
         <UiTextInput
@@ -72,9 +70,7 @@ export function ContactCreationForm() {
           type="text"
           autoComplete="family-name"
           value={formValues.lastName}
-          onChange={(event) =>
-            setFormValues((current) => ({ ...current, lastName: event.currentTarget.value }))
-          }
+          onValueChange={(value) => setFormValues((current) => ({ ...current, lastName: value }))}
         />
 
         <FormGridFull>
@@ -84,8 +80,8 @@ export function ContactCreationForm() {
             type="text"
             autoComplete="organization"
             value={formValues.companyName}
-            onChange={(event) =>
-              setFormValues((current) => ({ ...current, companyName: event.currentTarget.value }))
+            onValueChange={(value) =>
+              setFormValues((current) => ({ ...current, companyName: value }))
             }
           />
         </FormGridFull>
@@ -96,9 +92,7 @@ export function ContactCreationForm() {
           type="email"
           autoComplete="email"
           value={formValues.email}
-          onChange={(event) =>
-            setFormValues((current) => ({ ...current, email: event.currentTarget.value }))
-          }
+          onValueChange={(value) => setFormValues((current) => ({ ...current, email: value }))}
         />
 
         <UiTextInput
@@ -107,9 +101,7 @@ export function ContactCreationForm() {
           type="tel"
           autoComplete="tel"
           value={formValues.phone}
-          onChange={(event) =>
-            setFormValues((current) => ({ ...current, phone: event.currentTarget.value }))
-          }
+          onValueChange={(value) => setFormValues((current) => ({ ...current, phone: value }))}
         />
       </FormGrid>
 
